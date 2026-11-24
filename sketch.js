@@ -1,0 +1,188 @@
+let beat, analyzer;
+let beatLow, beatMid, beatHigh;
+
+// array to hold the rows from the csv file
+const rows = [];
+let totalYears = 0;
+let currentRow;
+
+// which year we are on and a counter to move to the next year
+let yearIndex = 0;
+let timer = 0;
+
+// Load sound files before canvas loads so they are ready
+function preload() {
+    beatLow = loadSound('beat_low.mp3');
+    beatMid = loadSound('beat_mid.mp3');
+    beatHigh = loadSound('beat_high.mp3');
+    beat = beatLow;
+}
+
+function setup() {
+    let myCanvas = createCanvas(900, 400);
+    myCanvas.parent('myContainer');
+
+    analyzer = new p5.Amplitude();
+    analyzer.setInput(beat);
+
+    // read in the data
+    Papa.parse('womencs.csv', {
+        download: true,
+        header: true,
+        skipEmptyLines: true,
+        complete: function(results) {
+            console.log("running");
+            console.log(results.data);
+
+            results.data.forEach(row => {
+                rows.push(row);
+                totalYears++;
+            });
+        },
+
+        error: function(err) {
+            console.error("FAILED");
+            console.error(err);
+        }
+    });
+}
+
+function mousePressed() {
+    if (beat.isPlaying()) {
+        beat.stop();
+    } else {
+        beat.loop();
+        findYear();
+        drawDots();
+    }
+}
+
+function draw() {
+
+    // only run while the beat is playing
+    if (beat.isPlaying()) {
+
+        // move on to the next year every 60 frames (about one second)
+        timer++;
+        if (timer > 60) {
+            timer = 0;
+            yearIndex++;
+
+            // go back to the start after the last year
+            if (yearIndex >= totalYears) {
+                yearIndex = 0;
+            }
+
+            findYear();
+            drawDots();
+            changeBeat();
+        }
+
+        let percent = cleanNumber(currentRow.WomenPercent);
+
+        // Get the average (root mean square) amplitude
+        let rms = 0
+        if (analyzer.getLevel()){
+            rms = analyzer.getLevel();
+        }
+
+        // remove the last circle
+        erase();
+        ellipse(750, height / 2, 260, 260);
+        noErase();
+
+        fill('purple');
+        stroke(0);
+
+        // Draw a circle with size based on the percentage of women and the volume
+        ellipse(750, height / 2, percent * 4 + rms * 100, percent * 4 + rms * 100);
+    }
+}
+
+// draws one dot for every ten graduates for the current year
+function drawDots() {
+    let row = currentRow;
+    let dots = cleanNumber(row.Total) / 10;
+    let womenDots = cleanNumber(row.Women) / 10;
+
+    // clear the whole canvas before drawing the new year
+    erase();
+    ellipse(width / 2, height / 2, 1200, 1200);
+    noErase();
+
+    // go along each row of the dot field, then down to the next row
+    let x = 0;
+    let y = 0;
+
+    for (let i = 0; i < dots; i++) {
+
+        // women's dots first, then men's dots
+        if (i < womenDots) {
+            fill('purple');
+            stroke('purple');
+        } else {
+            fill(200);
+            stroke(200);
+        }
+
+        ellipse(x * 4 + 2, y * 4 + 2, 2, 2);
+
+        // move along, and start a new row when this one is full
+        x++;
+        if (x >= 150) {
+            x = 0;
+            y++;
+        }
+    }
+
+    // print the numbers for this year into the table
+    const tbody = document.querySelector('#dataTable tbody');
+
+    tbody.innerHTML = `
+        <tr>
+            <td>${row.Year}</td>
+            <td>${row.Women}</td>
+            <td>${row.Men}</td>
+            <td>${row.WomenPercent}</td>
+            <td>${row.GenderGap}</td>
+        </tr>
+    `;
+}
+
+// the lower the share of women, the lower the beat
+function changeBeat() {
+    let percent = cleanNumber(currentRow.WomenPercent);
+
+    beat.stop();
+
+    if (percent < 20) {
+        beat = beatLow;
+    }
+    else if (percent < 30) {
+        beat = beatMid;
+    }
+    else {
+        beat = beatHigh;
+    }
+
+    beat.loop();
+    analyzer.setInput(beat);
+}
+
+// goes through every row and keeps the one for the current year
+function findYear() {
+    let count = 0;
+
+    rows.forEach(row => {
+        if (count >= yearIndex && count < yearIndex + 1) {
+            currentRow = row;
+        }
+        count++;
+    });
+}
+
+function cleanNumber(value) {
+    return Number(
+        String(value).replace(/[^0-9.-]/g, '')
+    );
+}
