@@ -12,9 +12,9 @@ let timer = 0;
 
 // Load sound files before canvas loads so they are ready
 function preload() {
-    beatLow = loadSound('beat_low.mp3');
-    beatMid = loadSound('beat_mid.mp3');
-    beatHigh = loadSound('beat_high.mp3');
+    beatLow = loadSound('beat_low.wav');
+    beatMid = loadSound('beat_mid.wav');
+    beatHigh = loadSound('beat_high.wav');
     beat = beatLow;
 }
 
