@@ -139,12 +139,12 @@ function drawDots() {
 
     tbody.innerHTML = `
         <tr>
-            <td>${row.Country}</td>
             <td>${row.Year}</td>
-            <td>${row.Female Enrollment (%)}</td>
-            <td>${row.Female Graudation Rate (%)}</td>
-            <td>${row.Stem Fields}</td>
-            <td>${row.Gender Gap Index}</td>
+            <td>${row.Country}</td>
+            <td>${row.STEMField}</td>
+            <td>${row.FemaleEnrollment}</td>
+            <td>${row.FemaleGraduation}</td>
+            <td>${row.GenderGapIndex}</td>
         </tr>
     `;
 }
