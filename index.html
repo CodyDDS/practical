@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>The Decline</title>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.0/p5.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.11.0/addons/p5.sound.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+        <script src="sketch.js"></script>
+        <link rel="stylesheet" href="style.css" />
+    </head>
+    <body>
+        <main>
+            <h1>The Decline</h1>
+            <p>Women graduating in computer science in the US. One dot for every ten graduates. Purple dots are women, grey dots are men. Click to play...</p>
+            <table id="dataTable">
+                <thead>
+                    <tr>
+                        <th>Year</th>
+                        <th>Women</th>
+                        <th>Men</th>
+                        <th>Women (%)</th>
+                        <th>Gender Gap (points)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            <div id='myContainer'></div>
+            <p>Data from <a href='https://nces.ed.gov/programs/digest/d22/tables/dt22_325.35.asp'>NCES Digest of Education Statistics, Table 325.35</a></p>
+        </main>
+    </body>
+</html>
