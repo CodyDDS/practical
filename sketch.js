@@ -19,7 +19,7 @@ function preload() {
 }
 
 function setup() {
-    let myCanvas = createCanvas(900, 400);
+    let myCanvas = createCanvas(900, 550);
     myCanvas.parent('myContainer');
 
     analyzer = new p5.Amplitude();
@@ -79,6 +79,7 @@ function draw() {
         }
 
         let percent = cleanNumber(currentRow.FemaleEnrollment);
+        let percent2 = cleanNumber(currentRow.FemaleGraduationRate);
 
         // Get the average (root mean square) amplitude
         let rms = 0
@@ -86,29 +87,33 @@ function draw() {
             rms = analyzer.getLevel();
         }
 
-        // remove the last circle
+        // remove the last circles
         erase();
-        ellipse(750, height / 2, 260, 260);
+        ellipse(200, 475, 140, 140);
+        ellipse(660, 475, 140, 140);
         noErase();
 
         fill('purple');
         stroke(0);
 
-        // Draw a circle with size based on the percentage of women and the volume
-        ellipse(750, height / 2, percent * 3 + rms * 100, percent * 3 + rms * 100);
+        // Draw a circle for each with size based on the percentage and the volume
+        ellipse(200, 475, percent * 1.5 + rms * 30, percent * 1.5 + rms * 30);
+        ellipse(660, 475, percent2 * 1.5 + rms * 30, percent2 * 1.5 + rms * 30);
     }
 }
 
-// draws 100 dots - each dot is one in every hundred students
+// draws two grids of 100 dots - enrollment on the left, graduation on the right
 function drawDots() {
     let row = currentRow;
     let womenDots = cleanNumber(row.FemaleEnrollment);
+    let graduateDots = cleanNumber(row.FemaleGraduationRate);
 
     // clear the whole canvas before drawing the new year
     erase();
     ellipse(width / 2, height / 2, 1200, 1200);
     noErase();
 
+    // LEFT GRID - female enrollment
     // go along each row of the dot field, then down to the next row
     let x = 0;
     let y = 0;
@@ -116,73 +121,4 @@ function drawDots() {
     for (let i = 0; i < 100; i++) {
 
         // women's dots first, then men's dots
-        if (i < womenDots) {
-            fill('purple');
-            stroke('purple');
-        } else {
-            fill(200);
-            stroke(200);
-        }
-
-        ellipse(x * 38 + 20, y * 38 + 20, 30, 30);
-
-        // move along, and start a new row when this one is full
-        x++;
-        if (x >= 10) {
-            x = 0;
-            y++;
-        }
-    }
-
-    // print the numbers for this year into the table
-    const tbody = document.querySelector('#dataTable tbody');
-
-    tbody.innerHTML = `
-        <tr>
-            <td>${row.Country}</td>
-            <td>${row.Year}</td>
-            <td>${row.FemaleEnrollment}</td>
-            <td>${row.FemaleGraduationRate}</td>
-            <td>${row.STEMFields}</td>
-            <td>${row.GenderGapIndex}</td>
-        </tr>
-    `;
-}
-
-// the lower the share of women, the lower the beat
-function changeBeat() {
-    let percent = cleanNumber(currentRow.FemaleEnrollment);
-
-    beat.stop();
-
-    if (percent < 30) {
-        beat = beatLow;
-    }
-    else if (percent < 50) {
-        beat = beatMid;
-    }
-    else {
-        beat = beatHigh;
-    }
-
-    beat.loop();
-    analyzer.setInput(beat);
-}
-
-// goes through every row and keeps the one for the current year
-function findYear() {
-    let count = 0;
-
-    rows.forEach(row => {
-        if (count >= yearIndex && count < yearIndex + 1) {
-            currentRow = row;
-        }
-        count++;
-    });
-}
-
-function cleanNumber(value) {
-    return Number(
-        String(value).replace(/[^0-9.-]/g, '')
-    );
-}
+        if (i
