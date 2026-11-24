@@ -121,4 +121,99 @@ function drawDots() {
     for (let i = 0; i < 100; i++) {
 
         // women's dots first, then men's dots
-        if (i
+        if (i < womenDots) {
+            fill('purple');
+            stroke('purple');
+        } else {
+            fill(200);
+            stroke(200);
+        }
+
+        ellipse(x * 38 + 20, y * 38 + 20, 30, 30);
+
+        // move along, and start a new row when this one is full
+        x++;
+        if (x >= 10) {
+            x = 0;
+            y++;
+        }
+    }
+
+    // RIGHT GRID - female graduation rate
+    // start again at the top, 460 pixels to the right
+    x = 0;
+    y = 0;
+
+    for (let i = 0; i < 100; i++) {
+
+        // graduates first, then everyone else
+        if (i < graduateDots) {
+            fill('purple');
+            stroke('purple');
+        } else {
+            fill(200);
+            stroke(200);
+        }
+
+        ellipse(460 + x * 38 + 20, y * 38 + 20, 30, 30);
+
+        // move along, and start a new row when this one is full
+        x++;
+        if (x >= 10) {
+            x = 0;
+            y++;
+        }
+    }
+
+    // print the numbers for this year into the table
+    const tbody = document.querySelector('#dataTable tbody');
+
+    tbody.innerHTML = `
+        <tr>
+            <td>${row.Country}</td>
+            <td>${row.Year}</td>
+            <td>${row.FemaleEnrollment}</td>
+            <td>${row.FemaleGraduationRate}</td>
+            <td>${row.STEMFields}</td>
+            <td>${row.GenderGapIndex}</td>
+        </tr>
+    `;
+}
+
+// the lower the share of women, the lower the beat
+function changeBeat() {
+    let percent = cleanNumber(currentRow.FemaleEnrollment);
+
+    beat.stop();
+
+    if (percent < 30) {
+        beat = beatLow;
+    }
+    else if (percent < 50) {
+        beat = beatMid;
+    }
+    else {
+        beat = beatHigh;
+    }
+
+    beat.loop();
+    analyzer.setInput(beat);
+}
+
+// goes through every row and keeps the one for the current year
+function findYear() {
+    let count = 0;
+
+    rows.forEach(row => {
+        if (count >= yearIndex && count < yearIndex + 1) {
+            currentRow = row;
+        }
+        count++;
+    });
+}
+
+function cleanNumber(value) {
+    return Number(
+        String(value).replace(/[^0-9.-]/g, '')
+    );
+}
