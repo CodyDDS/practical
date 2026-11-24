@@ -139,11 +139,11 @@ function drawDots() {
 
     tbody.innerHTML = `
         <tr>
-            <td>${row.Year}</td>
             <td>${row.Country}</td>
-            <td>${row.STEMField}</td>
+            <td>${row.Year}</td>
             <td>${row.FemaleEnrollment}</td>
             <td>${row.FemaleGraduation}</td>
+            <td>${row.StemFields}</td>
             <td>${row.GenderGapIndex}</td>
         </tr>
     `;
