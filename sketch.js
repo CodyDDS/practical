@@ -26,7 +26,7 @@ function setup() {
     analyzer.setInput(beat);
 
     // read in the data
-    Papa.parse('data.csv', {
+    Papa.parse('womencs.csv', {
         download: true,
         header: true,
         skipEmptyLines: true,
