@@ -142,8 +142,8 @@ function drawDots() {
             <td>${row.Country}</td>
             <td>${row.Year}</td>
             <td>${row.FemaleEnrollment}</td>
-            <td>${row.FemaleGraduation}</td>
-            <td>${row.StemFields}</td>
+            <td>${row.FemaleGraduationRate}</td>
+            <td>${row.STEMFields}</td>
             <td>${row.GenderGapIndex}</td>
         </tr>
     `;
