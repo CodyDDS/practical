@@ -12,9 +12,9 @@ let timer = 0;
 
 // Load sound files before canvas loads so they are ready
 function preload() {
-    beatLow = loadSound('beat_low.wav');
-    beatMid = loadSound('beat_mid.wav');
-    beatHigh = loadSound('beat_high.wav');
+    beatLow = loadSound('beat_low.mp3');
+    beatMid = loadSound('beat_mid.mp3');
+    beatHigh = loadSound('beat_high.mp3');
     beat = beatLow;
 }
 
@@ -26,7 +26,7 @@ function setup() {
     analyzer.setInput(beat);
 
     // read in the data
-    Papa.parse('womencs.csv', {
+    Papa.parse('data.csv', {
         download: true,
         header: true,
         skipEmptyLines: true,
@@ -78,7 +78,7 @@ function draw() {
             changeBeat();
         }
 
-        let percent = cleanNumber(currentRow.WomenPercent);
+        let percent = cleanNumber(currentRow.FemaleEnrollment);
 
         // Get the average (root mean square) amplitude
         let rms = 0
@@ -95,15 +95,14 @@ function draw() {
         stroke(0);
 
         // Draw a circle with size based on the percentage of women and the volume
-        ellipse(750, height / 2, percent * 4 + rms * 100, percent * 4 + rms * 100);
+        ellipse(750, height / 2, percent * 3 + rms * 100, percent * 3 + rms * 100);
     }
 }
 
-// draws one dot for every ten graduates for the current year
+// draws 100 dots - each dot is one in every hundred students
 function drawDots() {
     let row = currentRow;
-    let dots = cleanNumber(row.Total) / 10;
-    let womenDots = cleanNumber(row.Women) / 10;
+    let womenDots = cleanNumber(row.FemaleEnrollment);
 
     // clear the whole canvas before drawing the new year
     erase();
@@ -114,7 +113,7 @@ function drawDots() {
     let x = 0;
     let y = 0;
 
-    for (let i = 0; i < dots; i++) {
+    for (let i = 0; i < 100; i++) {
 
         // women's dots first, then men's dots
         if (i < womenDots) {
@@ -125,11 +124,11 @@ function drawDots() {
             stroke(200);
         }
 
-        ellipse(x * 4 + 2, y * 4 + 2, 2, 2);
+        ellipse(x * 38 + 20, y * 38 + 20, 30, 30);
 
         // move along, and start a new row when this one is full
         x++;
-        if (x >= 150) {
+        if (x >= 10) {
             x = 0;
             y++;
         }
@@ -141,24 +140,25 @@ function drawDots() {
     tbody.innerHTML = `
         <tr>
             <td>${row.Year}</td>
-            <td>${row.Women}</td>
-            <td>${row.Men}</td>
-            <td>${row.WomenPercent}</td>
-            <td>${row.GenderGap}</td>
+            <td>${row.Country}</td>
+            <td>${row.STEMField}</td>
+            <td>${row.FemaleEnrollment}</td>
+            <td>${row.FemaleGraduation}</td>
+            <td>${row.GenderGapIndex}</td>
         </tr>
     `;
 }
 
 // the lower the share of women, the lower the beat
 function changeBeat() {
-    let percent = cleanNumber(currentRow.WomenPercent);
+    let percent = cleanNumber(currentRow.FemaleEnrollment);
 
     beat.stop();
 
-    if (percent < 20) {
+    if (percent < 30) {
         beat = beatLow;
     }
-    else if (percent < 30) {
+    else if (percent < 50) {
         beat = beatMid;
     }
     else {
