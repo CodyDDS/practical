@@ -21,6 +21,9 @@ function preload() {
 function setup() {
     let myCanvas = createCanvas(900, 550);
     myCanvas.parent('myContainer');
+    document
+    .getElementById('playButton')
+    .addEventListener('click', playPause);
 
     analyzer = new p5.Amplitude();
     analyzer.setInput(beat);
