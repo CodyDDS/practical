@@ -1,1 +1,29 @@
+#navigation {
+  font-family: Georgia, serif;
+  font-size: 100%;
+  border-top: solid 2px purple;
+  border-bottom: solid 2px purple;
+  text-align: center;
+}
 
+li {
+  display: inline;
+  list-style-type: none;
+}
+
+a:link, a:visited, a:active {
+  color: purple;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+a:hover {
+  color: purple;
+  text-decoration: underline;
+  font-weight: bold;
+}
+
+.current {
+  text-decoration: underline;
+  font-weight: bold;
+}
