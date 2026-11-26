@@ -82,3 +82,11 @@ a:hover {
   text-decoration: underline;
   font-weight: bold;
 }
+
+button {
+  font-size: 100%;
+  padding: 5px;
+  background: purple;
+  color: white;
+  font-weight: bold;
+}
