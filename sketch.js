@@ -47,7 +47,7 @@ function setup() {
     });
 }
 
-function mousePressed() {
+function PlayPause() {
     if (beat.isPlaying()) {
         beat.stop();
     } else {
